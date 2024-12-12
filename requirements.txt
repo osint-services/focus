@@ -1,0 +1,2 @@
+socid-extractor
+fastapi[standard]
