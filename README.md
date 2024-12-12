@@ -21,8 +21,26 @@ focus is an OSINT microservice that seaches the profile of a given URL and retur
 ```python
 import httpx
 import urllib
+import time
 
-v = 'https://www.deviantart.com/muse1908'
-url = urllib.parse.quote(v, safe='')
-response = httpx.get(f'http://localhost:8000/profile?url={url}') # assuming the server is running locally
+# processing, try again later or get the current status
+
+status_code = 102
+while status_code == 102:
+    response = httpx.get(f'http://localhost:8000/scan/j-doe') # assuming the server is running locally
+    status_code = response.status_code
+
+    if status_code == 102:
+        time.sleep(5) # give server time to process
+        continue
+
+    if response.status_code == 200:
+        profiles_found = response.json()
+        for profile in profiles_found:
+            unsafe_url = profile["uri_check"]
+            url = urllib.parse.quote(unsafe_url, safe='')
+            response = httpx.get(f'http://localhost:8000/focus?url={url}') # assuming the server is running locally
+            details = response.json() # contains profile details
+            print(details)
+        
 ```
