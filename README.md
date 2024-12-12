@@ -39,7 +39,7 @@ while status_code == 102:
         for profile in profiles_found:
             unsafe_url = profile["uri_check"]
             url = urllib.parse.quote(unsafe_url, safe='')
-            response = httpx.get(f'http://localhost:8000/focus?url={url}') # assuming the server is running locally
+            response = httpx.get(f'http://localhost:8001/focus?url={url}') # assuming the server is running locally
             details = response.json() # contains profile details
             print(details)
         
